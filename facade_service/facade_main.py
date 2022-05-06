@@ -1,24 +1,29 @@
-
 import requests
+import random
 import uuid
 from fastapi import FastAPI, Header, Response, Request
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
+logging_instances = ['8082', '8083', '8084']
 
 
 async def get_messages():
-    request = requests.get("http://127.0.0.1:8082/messages/")
+    request = requests.get("http://127.0.0.1:8081/messages/")
     return request.json()
 
 
 async def get_log():
-    request = requests.get("http://127.0.0.1:8081/logging/")
+    node_port = logging_instances[random.randint(1, 3)]
+    print(node_port)
+    request = requests.get(f"http://127.0.0.1:{node_port}/logging/")
     return request.json()
 
 
 async def post_to_log(data=None):
-    request = requests.post("http://127.0.0.1:8081/logging/", json=data)
+    node_port = logging_instances[random.randint(0, 2)]
+    data['port'] = node_port
+    request = requests.post(f"http://127.0.0.1:{node_port}/logging/", json=data)
     status = request.json()
     if status["status"] == "OK":
         return 200
