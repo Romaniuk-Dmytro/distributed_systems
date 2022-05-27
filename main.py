@@ -1,7 +1,7 @@
 import requests
 import json
 
-# for i in range(1, 10):
+# for i in range(1, 11):
 #     post_req = requests.post('http://127.0.0.1:8080/facade/', json={"msg": f"text{str(i)}"})
 #     print(post_req.text)
 

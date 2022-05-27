@@ -25,5 +25,4 @@ async def post_logging(request: Request) -> JSONResponse:
 
 @app.get("/logging/")
 async def get_logging() -> JSONResponse:
-    # print('\n\n', my_map.values(), '\n\n')
     return JSONResponse({"all_messages": [x for x in my_map.values()]})
