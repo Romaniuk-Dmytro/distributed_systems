@@ -1,10 +1,16 @@
 from fastapi import FastAPI, Header, Response, Request
 from fastapi.responses import JSONResponse
 import hazelcast
+import consul
 
 app = FastAPI()
+
+con = consul.Consul(host='localhost', port=8500)
+con.agent.service.register('messages_2', port=8085)
+queue_name = con.kv.get("queue_name")
+
 client = hazelcast.HazelcastClient()
-queue = client.get_queue("default")
+queue = client.get_queue(str(queue_name[1]['Value']))
 
 node_memory_dict = {'messages_list': []}
 

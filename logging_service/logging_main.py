@@ -1,13 +1,17 @@
 from fastapi import FastAPI, Header, Response, Request
 from fastapi.responses import JSONResponse
 import hazelcast
+import consul
 
 app = FastAPI()
 logging_info = {}
 
+con = consul.Consul(host='localhost', port=8500)
+con.agent.service.register('logging_3', port=8084)
+map_name = con.kv.get("map_name")
 
 client = hazelcast.HazelcastClient()
-my_map = client.get_map("my-distributed-map").blocking()
+my_map = client.get_map(str(map_name[1]['Value'])).blocking()
 
 
 @app.post("/logging/")
